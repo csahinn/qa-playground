@@ -8,12 +8,23 @@ import { validateText,
 const products: Product[] = [];
 let nextId = 1;
 
+type ProductUpdate = Partial<Omit<Product, "id">>;
+
 export function addProduct(
     name: string,
     category: string,
     stock: number,
     price: number
 ): Product {
+
+    if (
+        !validateText (name) ||
+        !validateText (category) ||
+        !validateInteger (String(stock)) ||
+        !validateDouble (String(price))
+    ) {
+        throw new Error("Invalid product data");
+    }
 
     const newProduct: Product = {
         id: nextId++,
@@ -49,7 +60,6 @@ export function deleteProductById(id: number): boolean {
     return true;
 }
 
-type ProductUpdate = Partial<Omit<Product, "id">>;
 
 export function updateProductById(
     id: number,
