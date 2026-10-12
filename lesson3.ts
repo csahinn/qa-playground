@@ -44,13 +44,70 @@ while (isRunning) {
     }
 }
 
+function validateText(inputText: string): boolean {
+    if (inputText.trim() === "") {
+        return false; 
+    }
+    return true;
+}
+
+function validateInteger(inputInteger: string): boolean {
+    const integer = Number(inputInteger);
+
+    return (
+        inputInteger.trim() !== "" &&
+        Number.isInteger(integer) &&
+        integer >= 0
+    )
+}
+
+function validateDouble(inputDouble: string): boolean {
+    const double = Number(inputDouble);
+
+    return (
+        inputDouble.trim() !== "" &&
+        Number.isFinite(double) &&
+        double >= 0
+    )
+}
+
+/* ÜRÜN EKLEME FONKSİYONU */
+
 function addProduct() {
     console.log("\n=== Ürün Ekle ===");
 
     const name = prompt("Ürün adı: ");
     const category = prompt("Ürün tipi: ");
-    const stock = Number(prompt("Ürün stoğu: "));
-    const price = Number(prompt("Ürün fiyatı: "));
+
+    const stockInput = prompt("Ürün stoğu: ");
+    const stock = Number(stockInput);
+
+    const priceInput = prompt("Ürün fiyatı: ");
+    const price = Number(priceInput);
+
+    const errors: string[] = [];
+
+    if (!validateInteger(stockInput)) {
+        errors.push("ürün stok miktarı");
+    }
+
+    if (!validateDouble(priceInput)) {
+        errors.push("ürün fiyatı");
+    }
+
+    if (!validateText(name)) {
+        errors.push("ürün ismi");
+    }
+
+    if (!validateText(category)) {
+        errors.push("ürün kategorisi");
+    }
+
+    if (errors.length > 0) {
+        console.log(`Geçersiz giriş: ${errors.join(", ")}`);
+        return;
+    }
+    
 
     productsList.push({
         id: nextId++,
@@ -62,6 +119,8 @@ function addProduct() {
 
     totalProduct = totalProduct + stock;
 }
+
+/* ÜRÜN LİSTELEME FONKSİYONU */
 
 function listProducts() {
     console.log("\n=== Ürün Listele ===");
@@ -88,28 +147,49 @@ function listProducts() {
     prompt("\nAna menüye dönmek için Enter'a basın...");
 }
 
+/* ÜRÜN GÜNCELLEME FONKSİYONU */
+
 function updateProductName(product: Product) {
     const newName = prompt("Yeni ürün adı: ");
+    if (!validateText(newName)) {
+        console.log("Geçersiz isim girişi!");
+        return;
+    }
     product.name = newName;
     console.log("Ürün adı güncellendi. Lütfen kontrol edin.");
 }
 
 function updateProductCategory(product: Product) {
     const newCategory = prompt("Yeni kategori adı: ");
+    if(!validateText(newCategory)) {
+        console.log("Geçersiz kategori girişi!");
+        return;
+    }
     product.category = newCategory;
     console.log("Ürün kategorisi güncellendi. Lütfen kontrol edin.");
 }
 
 function updateProductStock(product: Product) {
-    const newStock = Number(prompt("Yeni stok miktarı: "));
-    product.stock = newStock; 
+    const newStock = prompt("Yeni stok miktarı: ");
+        if(!validateInteger(newStock)) {
+        console.log("Geçersiz stok miktarı girişi!");
+        return;
+    }
+    product.stock = Number(newStock); 
+
+
     console.log("Ürün stoğu güncellendi. Lütfen kontrol edin.");
 }
 
 function updateProductPrice(product: Product) {
-    const newPrice = Number(prompt("Yeni ürün fiyatı: "));
-    product.price = newPrice; 
-    console.log("Ürün stoğu güncellendi. Lütfen kontrol edin.");
+    const newPrice = prompt("Yeni ürün fiyatı: ");
+    if (!validateDouble(newPrice)) {
+        console.log("Geçersiz ürün fiyatı girişi!");
+        return;
+    }
+    product.price = Number(newPrice); 
+
+    console.log("Ürün fiyatı güncellendi. Lütfen kontrol edin.");
 }
 
 function updateProduct() {
@@ -155,6 +235,9 @@ function updateProduct() {
         }
     }
 }
+
+
+/* ÜRÜN SİLME FONKSİYONU */
 
 function deleteProduct() {
     console.log("\n=== Ürün Sil ===");
