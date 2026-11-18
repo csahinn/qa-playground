@@ -82,25 +82,25 @@ const firstName1 = order.customer.firstName;
 const lastName2 = order.customer.lastName;
 */
 // Destructing ikisini aynı satırda tanımlayabilir.
-const { firstName, lastName } = order.customer;
+// const { firstName, lastName } = order.customer;
 
 // Önemli Not: Object Destructing, property isimlerine göre çalışır. Dolayısıyla
 // firstName ve lastName, nesnedeki özelliklerle eşleşiyor.
 
 // 2. Variable Renaming
 // Peki ya nesnedeki id özelliğini başka isimle kullanmak istersek?
-
+/*
 const { id: orderId, status: orderStatus } = order;
 
 console.log(orderId);
 console.log(orderStatus);
-
+*/
 // Burada id: orderId şu anlama geliyor: Nesnedeki id özelliğini al orderId isimli 
 // bir değişkene koy.
 
 // 3. Nested Destructing
 // İç içe nesnelerde de Destructing kullanılabilir:
-
+/*
 const {
     customer: {
         address: {city, district}
@@ -109,7 +109,7 @@ const {
 
 console.log(city);
 console.log(district);
-
+*/
 // Burada city ve district değişkenleri oluşturulur. Ancak customer ve address isimli
 // değişkenler oluşturulmaz.
 
@@ -125,3 +125,60 @@ const [, secondSize] = sizes;
 console.log(secondSize);
 
 // Destructing, Playwright'ta sıkça kullanılıyor. O yüzden öğrenilmesi gerekiyor.
+
+const { 
+    id: orderId, 
+    status: orderStatus, 
+    customer: {
+        firstName, // JavaScript'te değişken adı ile property adı aynı olacaksa iki noktalı title koymaya gerek yok.
+        address: {
+            city
+        }
+    },
+    items: [firstItem]
+} = order;
+
+console.log(orderId);
+console.log(orderStatus);
+console.log(firstName);
+console.log(city);
+console.log(firstItem);
+
+
+// Yeni Konu : Spread & Rest Operator
+/*
+   Diyelim ki QA Playground API'de yeni bir sipariş oluşturmak isteniyor. Elinde bir sipariş nesnesi örnek
+   ürün var ve bir testte siparişin durumunu değiştirip tekrar istek atmak istiyorsun. Orijinal test verisini
+   bozmamak için ... şeklinde kopya değişken atanır.
+*/
+
+// Spread Operator (...)
+const product = {
+    name: "Snickers",
+    price: 50,
+    stock: 10
+}
+
+const discountedProduct = {
+    ...product,
+    price: 40
+} 
+
+console.log(product);
+console.log(discountedProduct);
+
+// Rest Operator (...)
+/* 
+   Rest Operator ise aynı üç noktayı başka amaçla kullanıyor. Bir nesneden belirli özellikleri ayırıp kalan-
+   ları toplamak. Response'tan gereksiz alanları ayırmaya yarar.
+*/
+
+const { price, ...productWithoutPrice } = product;
+
+const updatedOrder = {
+    ...order,
+    status: "SHIPPED"
+}
+
+console.log(updatedOrder);
+
